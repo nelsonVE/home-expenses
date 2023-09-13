@@ -1,0 +1,56 @@
+{% load i18n %}
+{% translate "Category" as category %}
+{% translate "Date" as date %}
+{% translate "Amount" as amount %}
+{% translate "Description" as description %}
+{% translate "Paid by" as paid_by %}
+{% translate "Expenses of" as title %}
+{% translate "Filter" as filter %}
+{% translate "Month" as month %}
+{% translate "Year" as year %}
+<div class="table-responsive-md">
+    <h2>{{ title }} {{ month_name }} {{ year_number }}</h2>
+    <form method="get">
+        <div class="row">
+            <div class="col">{{ filter_form.month }}</div>
+            <div class="col">{{ filter_form.year }}</div>
+            <div class="col">
+                <button type="button"
+                        class="btn btn-primary"
+                        hx-get="{% url 'expense-list' %}"
+                        hx-include="[name='month'],[name='year']"
+                        hx-target="#app">{{ filter }}</button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">{{ date }}</th>
+                <th scope="col">{{ category }}</th>
+                <th scope="col">{{ description }}</th>
+                <th scope="col">{{ amount }}</th>
+                <th scope="col">{{ paid_by }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.date }}</td>
+                    <td>
+                        <span class="badge rounded-pill bg-primary">{{ expense.category.name }}</span>
+                    </td>
+                    <td>{{ expense.description }}</td>
+                    <td class="text-end">{{ expense.amount }}</td>
+                    <td>{{ expense.paid_by.username }}</td>
+                </tr>
+            {% endfor %}
+            <tr class="table-success">
+                <td class="text-end" colspan="3">Total:</td>
+                <td class="text-end fw-bold">{{ total }}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

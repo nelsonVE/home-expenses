@@ -1,0 +1,24 @@
+{% load i18n %}
+{% translate "Add" as submit_text %}
+{% translate "Add expense" as form_title %}
+<div>
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">{% translate "Please correct the error(s) below." %}</div>
+    {% elif messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <h2>{{ form_title }}</h2>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit"
+                class="btn btn-primary"
+                style="width: 100%"
+                hx-post="{% url 'expense' %}"
+                hx-target="#app"
+                >{{ submit_text }}</button>
+    </form>
+</div>

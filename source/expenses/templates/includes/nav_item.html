@@ -1,0 +1,8 @@
+<li class="nav-item">
+    <a class="nav-link {% if active %}active{% endif %}"
+       aria-current="page"
+       href="#"
+       hx-get="{% url url_name %}"
+       hx-target="#app"
+       onclick="javascript:document.querySelector('.btn-close').click()">{{ name }}</a>
+</li>

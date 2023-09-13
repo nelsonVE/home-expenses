@@ -1,0 +1,78 @@
+{% load i18n %}
+{% translate "Category" as category %}
+{% translate "Date" as date %}
+{% translate "Amount" as amount %}
+{% translate "Description" as description %}
+{% translate "Paid by" as paid_by %}
+{% translate "Expenses of" as title %}
+{% translate "Filter" as filter %}
+{% translate "Month" as month %}
+{% translate "Year" as year %}
+{% translate "Discounted" as discounted %}
+{% translate "Paid" as paid %}
+{% translate "Total paid" as total_paid %}
+{% translate "Total per user" as total_per_user_text %}
+{% translate "Total discounted" as total_discounted_text %}
+{% translate "Total amount to pay" as total_amount_to_pay_text %}
+
+<div class="table-responsive-md">
+    <h2>{{ title }} {{ request.user.username }} {{ month_name }} {{ year_number }}</h2>
+    <form method="get">
+        <div class="row">
+            <div class="col">{{ filter_form.month }}</div>
+            <div class="col">{{ filter_form.year }}</div>
+            <div class="col">
+                <button type="button"
+                        class="btn btn-primary"
+                        hx-get="{% url 'expense-user-list' %}"
+                        hx-include="[name='month'],[name='year']"
+                        hx-target="#app">{{ filter }}</button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">{{ date }}</th>
+                <th scope="col">{{ category }}</th>
+                <th scope="col">{{ description }}</th>
+                <th scope="col" class="text-end">{{ total_paid }}</th>
+                <th scope="col" class="text-end">{{ amount }}</th>
+                <th scope="col" class="text-end">{{ discounted }}</th>
+                <th scope="col">{{ paid_by }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense_share in expenses %}
+                <tr>
+                    <td>{{ expense_share.expense.date }}</td>
+                    <td>{{ expense_share.expense.category.name }}</td>
+                    <td>{{ expense_share.expense.description }}</td>
+                    <td class="text-end">{{ expense_share.expense.amount }}</td>
+                    <td class="text-end">{{ expense_share.amount }}</td>
+                    <td class="text-end">{{ expense_share.discount }}</td>
+                    <td>{{ expense_share.expense.paid_by.username }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+            <tr class="table-success">
+                <td class="text-end" colspan="4">{{ total_per_user_text }}:</td>
+                <td class="text-end fw-bold">{{ total_per_user|floatformat:2 }}</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="table-success">
+                <td class="text-end" colspan="4">{{ total_discounted_text }}:</td>
+                <td class="text-end fw-bold">{{ total_to_discount|floatformat:2 }}</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="table-success">
+                <td class="text-end" colspan="4">{{ total_amount_to_pay_text }}:</td>
+                <td class="text-end fw-bold">{{ total|floatformat:2 }}</td>
+                <td colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
