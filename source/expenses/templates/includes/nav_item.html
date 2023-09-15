@@ -4,5 +4,9 @@
        href="#"
        hx-get="{% url url_name %}"
        hx-target="#app"
-       onclick="javascript:document.querySelector('.btn-close').click()">{{ name }}</a>
+       {% if not reload %}
+       onclick="javascript:document.querySelector('.btn-close').click()"
+       {% else %}
+       onclick="javascript:window.location.reload()"
+       {% endif %}>{{ name }}</a>
 </li>

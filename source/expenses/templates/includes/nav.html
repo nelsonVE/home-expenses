@@ -30,7 +30,7 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-column flex-grow-1 pe-3 mb-auto">
-                    {% include "./nav_item.html" with url_name="home" name=menu_home %}
+                    {% include "./nav_item.html" with url_name="home" name=menu_home reload=True %}
                     {% include "./nav_item.html" with url_name="expense-list" name=menu_view_expenses %}
                     {% include "./nav_item.html" with url_name="expense" name=menu_add_expense %}
                     {% include "./nav_item.html" with url_name="expense-user-list" name=menu_user_expenses %}

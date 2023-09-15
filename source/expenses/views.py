@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.contrib import messages
 from django.shortcuts import render
 from django.utils import timezone
+from django.db.models import Sum
 from django.views import View
 
 from .forms import ExpenseForm, ExpenseFilterForm
@@ -11,8 +14,25 @@ from .mixins import FilterMixin
 
 
 class HomeView(View):
+    def get_context_data(self, **kwargs):
+        queryset = Expense.objects.filter(
+            date__year=timezone.now().year
+        ).values(
+            "date__month"
+        ).annotate(
+            total=Sum("amount")
+        ).order_by(
+            "date__month"
+        )
+        context = {}
+        context["expenses"] = {
+            datetime(1900, month["date__month"], 1).strftime("%B"): month["total"]
+            for month in queryset
+        }
+        return context
+    
     def get(self, request):
-        return render(request, 'home.html')
+        return render(request, 'home.html', self.get_context_data())
 
 
 class ExpenseFormView(FormView):

@@ -1,9 +1,13 @@
 import decimal
 
+from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.db.models import QuerySet
+from django.conf import settings
 from django.db import models
 
+import prettytable as pt
 
 
 class Category(models.Model):
@@ -14,12 +18,33 @@ class Category(models.Model):
 
 
 class Expense(models.Model):
-    paid_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expenses')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=8, decimal_places=2)
-    description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    date = models.DateField()
+    paid_by = models.ForeignKey(
+        User,
+        verbose_name=_('Paid by'),
+        on_delete=models.CASCADE,
+        related_name='expenses'
+    )
+    category = models.ForeignKey(
+        Category,
+        verbose_name=_('Category'),
+        on_delete=models.CASCADE
+    )
+    amount = models.DecimalField(
+        verbose_name=_('Amount'),
+        max_digits=8,
+        decimal_places=2
+    )
+    description = models.TextField(
+        verbose_name=_('Description'),
+        blank=True,
+        null=True
+    )
+    created_by = models.ForeignKey(
+        User,
+        verbose_name=_('Created by'),
+        on_delete=models.CASCADE
+    )
+    date = models.DateField(verbose_name=_('Date'))
 
     def __str__(self) -> str:
         return f'{self.paid_by} - {self.amount}'
@@ -50,7 +75,7 @@ class Expense(models.Model):
 
 class ExpenseShare(models.Model):
     expense = models.ForeignKey(Expense, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='expense_shares')
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     discount = models.DecimalField(max_digits=8, decimal_places=2, default=decimal.Decimal(0.0))
 
@@ -123,6 +148,10 @@ class ExpenseShare(models.Model):
             total_discount=models.Sum('discount')
         )
 
+        # Delete previous month summary
+        ExpenseShareSummary.objects.filter(year=year, month=month).delete()
+
+        # Create new summary
         ExpenseShareSummary.objects.bulk_create([
             ExpenseShareSummary(
                 user=user,

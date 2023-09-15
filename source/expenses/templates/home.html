@@ -1,4 +1,43 @@
 {% extends "./master.html" %}
 
 {% block content %}
+    <h1>Home</h1>
+    <hr>
+    <canvas id="expenseChart"></canvas>
+
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('expenseChart');
+    const data = {
+        labels: [
+            {% for month in expenses.keys %}
+                "{{ month }}",
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Expenses',
+            data: [
+                {% for total in expenses.values %}
+                    {{ total|floatformat:2 }},
+                {% endfor %}
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+            ],
+            borderWidth: 1,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }]
+    };
+
+  new Chart(ctx, {
+    type: 'line',
+    data: data,
+  });
+</script>
+{% endblock scripts %}

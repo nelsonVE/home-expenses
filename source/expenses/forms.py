@@ -18,8 +18,8 @@ class ExpenseForm(forms.ModelForm):
         )
         default_attrs = {'class': 'form-control mb-3'}
         widgets = {
-            'category': forms.Select(attrs={**default_attrs, 'placeholder': 'Category'}),
-            'paid_by': forms.Select(attrs={**default_attrs, 'placeholder': 'Paid by'}),
+            'category': forms.Select(attrs={**default_attrs, 'placeholder': _('Category')}),
+            'paid_by': forms.Select(attrs={**default_attrs, 'placeholder': _('Paid by')}),
             'description': forms.Textarea(attrs={**default_attrs, 'rows': 3}),
             'date': forms.DateInput(attrs={'type': 'date', 'autocomplete': 'off', **default_attrs}),
             'amount': forms.NumberInput(attrs={'step': '0.01', **default_attrs}),
