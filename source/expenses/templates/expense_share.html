@@ -26,7 +26,7 @@
                         class="btn btn-primary"
                         hx-get="{% url 'expense-user-list' %}"
                         hx-include="[name='month'],[name='year']"
-                        hx-target="#app">{{ filter }}</button>
+                        hx-target="#app"><i class="fa-solid fa-magnifying-glass"></i> {{ filter }}</button>
             </div>
         </div>
     </form>

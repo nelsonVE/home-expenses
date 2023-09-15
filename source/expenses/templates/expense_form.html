@@ -19,6 +19,9 @@
                 style="width: 100%"
                 hx-post="{% url 'expense' %}"
                 hx-target="#app"
-                >{{ submit_text }}</button>
+                >
+                <i class="fa-solid fa-circle-plus"></i>
+                {{ submit_text }}
+            </button>
     </form>
 </div>

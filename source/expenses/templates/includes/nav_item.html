@@ -1,12 +1,13 @@
 <li class="nav-item">
-    <a class="nav-link {% if active %}active{% endif %}"
+    <a class="nav-link {% if active %}active{% endif %} icon-link"
        aria-current="page"
        href="#"
        hx-get="{% url url_name %}"
        hx-target="#app"
-       {% if not reload %}
-       onclick="javascript:document.querySelector('.btn-close').click()"
-       {% else %}
-       onclick="javascript:window.location.reload()"
-       {% endif %}>{{ name }}</a>
+       {% if not reload %} onclick="javascript:document.querySelector('.btn-close').click()" {% else %} onclick="javascript:window.location.reload()" {% endif %}>
+        {% if icon %}
+        <i class="{{ icon }}"></i>
+        {% endif %}
+        <span class="ml-3">{{ name }}</span>
+    </a>
 </li>

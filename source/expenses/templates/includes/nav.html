@@ -6,7 +6,7 @@
 {% translate "View expenses" as menu_view_expenses %}
 {% translate "My expenses" as menu_user_expenses %}
 
-<nav class="navbar bg-body-secondary fixed-top">
+<nav class="navbar bg-body fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">{{ navbar_title }}</a>
         <button class="navbar-toggler"
@@ -17,12 +17,12 @@
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas offcanvas-start"
+        <div class="offcanvas offcanvas-start bg-body"
              tabindex="-1"
              id="offcanvasNavbar"
              aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">{{ menu_title }}</h5>
+                <h5 class="offcanvas-title text-secondary-emphasis" id="offcanvasNavbarLabel">{{ menu_title }}</h5>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="offcanvas"
@@ -30,10 +30,10 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-column flex-grow-1 pe-3 mb-auto">
-                    {% include "./nav_item.html" with url_name="home" name=menu_home reload=True %}
-                    {% include "./nav_item.html" with url_name="expense-list" name=menu_view_expenses %}
-                    {% include "./nav_item.html" with url_name="expense" name=menu_add_expense %}
-                    {% include "./nav_item.html" with url_name="expense-user-list" name=menu_user_expenses %}
+                    {% include "./nav_item.html" with url_name="home" name=menu_home reload=True icon="fa-solid fa-house" %}
+                    {% include "./nav_item.html" with url_name="expense-list" name=menu_view_expenses icon="fa-solid fa-eye" %}
+                    {% include "./nav_item.html" with url_name="expense" name=menu_add_expense icon="fa-solid fa-circle-plus" %}
+                    {% include "./nav_item.html" with url_name="expense-user-list" name=menu_user_expenses icon="fa-solid fa-user-tag" %}
                 </ul>
                 <hr>
                 {% include "./user_dropdown.html" %}
