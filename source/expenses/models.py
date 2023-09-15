@@ -150,3 +150,79 @@ class ExpenseShareSummary(models.Model):
     def set_paid(self):
         self.paid = True
         self.save(update_fields=['paid'])
+
+    def get_email_body(self) -> str:
+        table = pt.PrettyTable()
+        table.field_names = [
+            _('Date'),
+            _('Category'),
+            _('Description'),
+            _('Total paid'),
+            _('Amount'),
+            _('Discount'),
+            _('To pay'),
+        ]
+
+        table.align[_('Total paid')] = 'r'
+        table.align[_('Amount')] = 'r'
+        table.align[_('Discount')] = 'r'
+        table.align[_('To pay')] = 'r'
+
+        table.vrules = pt.ALL
+        table.padding_width = 3
+
+        total = Expense.get_monthly_total(self.year, self.month)
+        total_per_user = ExpenseShare.get_per_user_monthly_total(self.year, self.month)
+        shares = ExpenseShare.objects.filter(
+            expense__date__year=self.year,
+            expense__date__month=self.month,
+            user=self.user
+        )
+
+        for share in shares:
+            table.add_row([
+                share.expense.date,
+                share.expense.category,
+                share.expense.description,
+                round(share.expense.amount),
+                round(share.amount),
+                round(share.discount),
+                round(share.expense.amount - share.discount)
+            ])
+
+        table.add_row([
+            '',
+            '',
+            'Total',
+            round(total),
+            round(total_per_user),
+            round(self.total_discount),
+            round(self.to_pay)
+        ])
+
+        return _("""
+            <p>Hi <strong>%s</strong>,</p>
+            <p>Here is your monthly expense summary for %s/%s:</p>
+            %s
+        """) % (
+            self.user.username,
+            self.month,
+            self.year,
+            table.get_html_string(attributes={
+                'border': '1',
+                'style': 'border-width: 1px; border-collapse: collapse;'
+            }),
+        )
+
+    def get_email_subject(self) -> str:
+        return _('Monthly expense summary for %s/%s') % (self.month, self.year)
+
+    def notify_user(self):
+        send_mail(
+            self.get_email_subject(),
+            self.get_email_body(),
+            settings.EMAIL_HOST_USER,
+            [self.user.email],
+            html_message=self.get_email_body(),
+            fail_silently=False,
+        )

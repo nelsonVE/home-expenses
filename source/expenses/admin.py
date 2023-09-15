@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Expense, ExpenseShare
+from .models import Category, Expense, ExpenseShare, ExpenseShareSummary
 
 
 class ExpenseShareInline(admin.TabularInline):
@@ -14,3 +14,4 @@ class ExpenseAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Expense, ExpenseAdmin)
 admin.site.register(ExpenseShare)
+admin.site.register(ExpenseShareSummary)
