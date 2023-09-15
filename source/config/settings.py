@@ -23,6 +23,16 @@ env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-insecure-5%yfq_3aoa-0%=3#hg@q3#ytxb-#01wfg&5m)=4_n3a*cr)#se'),
     ALLOWED_HOSTS=(list, ['*']),
+    TELEBOT_API_TOKEN=(str, ''),
+
+    # Email settings
+    EMAIL_BACKEND=(str, 'django.core.mail.backends.smtp.EmailBackend'),
+    EMAIL_HOST=(str, ''),
+    EMAIL_HOST_USER=(str, ''),
+    EMAIL_HOST_PASSWORD=(str, ''),
+    EMAIL_PORT=(int, 587),
+    EMAIL_USE_TLS=(bool, True),
+    EMAIL_USE_SSL=(bool, False),
 )
 
 # Take environment variables from .env file
@@ -34,6 +44,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+TELEBOT_API_TOKEN = env('TELEBOT_API_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
@@ -61,6 +72,7 @@ INSTALLED_APPS = [
 
 PROJECT_APPS = [
     'expenses',
+    'telegram',
 ]
 
 INSTALLED_APPS += PROJECT_APPS
@@ -135,7 +147,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -143,6 +155,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -154,3 +169,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email settings
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_USE_SSL = env('EMAIL_USE_SSL')
